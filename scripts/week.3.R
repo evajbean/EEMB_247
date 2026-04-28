@@ -2,7 +2,7 @@
 # Eva Juengling Bean
 # Week 3: Stability Analyses
 # created 4/21/2026
-# last modified: 4/23/2026
+# last modified: 4/28/2026
 ############################################
 
 rm(list=ls())
@@ -153,3 +153,7 @@ eqm$root
 ###############################################################
 
 # Nicholson-Bailey host-parasitoid model
+
+max.time <- 100
+ini
+
