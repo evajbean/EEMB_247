@@ -155,5 +155,17 @@ eqm$root
 # Nicholson-Bailey host-parasitoid model
 
 max.time <- 100
-ini
+initial.p <- 13.86
+initial.h <- 30.8
+
+p <- rep(0, max.time+1)
+h <- rep(0, max.time+1)
+p[1] <- initial.p
+h[1] <- initial.h
+
+for (t in 1:max.time){
+  
+}
+
+
 
