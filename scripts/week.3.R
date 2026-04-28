@@ -17,6 +17,7 @@ library(janitor)
 library(deSolve)
 library(rootSolve)
 library(usethis)
+library(ggplot2)
 
 # load in data
 
@@ -153,10 +154,15 @@ eqm$root
 ###############################################################
 
 # Nicholson-Bailey host-parasitoid model
+# simulation
 
-max.time <- 100
-initial.p <- 13.86
-initial.h <- 30.8
+max.time <- 50
+initial.p <- 11
+initial.h <- 27
+
+R <- 2
+a <- 0.05
+c <- 0.9
 
 p <- rep(0, max.time+1)
 h <- rep(0, max.time+1)
@@ -164,8 +170,43 @@ p[1] <- initial.p
 h[1] <- initial.h
 
 for (t in 1:max.time){
-  
+  h[t+1] = R*h[t]*exp(-a*p[t])
+  p[t+1]=c*h[t]*(1-exp(-a*p[t]))
 }
 
+times <- seq(0,max.time)
 
+df <- data.frame(p, h, times)
 
+plot <- ggplot(df)+
+  geom_line(aes(x=times, y=p), color="forestgreen")+
+  geom_line(aes(x=times, y=h), color="darkred")+
+  theme_bw()
+
+plot # plot has big spikes and dies out--> no stable equilibrium
+
+################################################################
+
+# numerical solution
+
+parameters <- c(R=R, a=a, c=c)
+
+n.b.eqm <- function(x, parms){
+  h=x[1]
+  p=x[2]
+  
+  R=parms[1]
+  a=parms[2]
+  c=parms[3]
+  
+  F1=h-R*h*exp(-a*p)
+  F2=p-c*h*(1-exp(-a*p))
+
+  return(c(F1,F2))
+}
+
+x <- c(h=10, p=10)
+
+eqm.solve <- multiroot(n.b.eqm,x,parms=parameters)
+
+eqm.solve$root # solutions the same as calculated!
